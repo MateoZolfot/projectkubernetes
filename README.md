@@ -22,8 +22,6 @@ To-Do list app:
  - **Backend:** Node.js with Express.js for handling data processing. 
  - **Database:** MongoDB to store to-do tasks.
 
-from: https://github.com/knaopel/docker-frontend-backend-db.git
-
 ## Containerization
 
 Inside the `kubernetes-app-db` folder , the base application is divided into two folders:    
@@ -141,7 +139,6 @@ To test connectivity between pods, we first need to start minikube cluster using
 ```bash
 minikube start
 ```
-![start](/img/minikubestart.png)
 
 Setting alias to use kubectl:
 ```bash
