@@ -6,10 +6,8 @@
 - [Application Description](#application-description)
 - [Containerization](#containerization)
 - [Kubernetes Configuration](#kubernetes-configuration)
-- [Scaling](#scaling)
 - [Networking](#networking)
-- [Monitoring](#monitoring)
-
+  
 ## Objective
 
 Apply concepts learned about pods, deployments, and services in Kubernetes to deploy a multi-tier application. 
@@ -94,44 +92,44 @@ Overview of the Kubernetes deployment and service configurations for the web app
 #### Backend Deployment and Service
 
 ##### Deployment
-- **Name:** backend-k8s
-- **Container Image:** aptroide/backend-k8s:V3
+- **Name:** backend
+- **Container Image:** mateochalacan840/backend:v3
 - **Resources:** 
   - Memory Limit: 128Mi
   - CPU Limit: 250m
 - **Port:** 3000
 
 ##### Service
-- **Name:** backend-k8s
-- **Type:** NodePort
+- **Name:** backend
+- **Type:** LoadBalancer
 - **Port:** 3000
 - **Target Port:** 3000
 
 #### Frontend Deployment and Service
 
 ##### Deployment
-- **Name:** frontend-k8s
-- **Container Image:** aptroide/fronted-k8s:V3.1
+- **Name:** frontend
+- **Container Image:** mateochalacan840/frontend:v3
 - **Resources:** 
-  - Memory Limit: 1024Mi
+  - Memory Limit: 500Mi
   - CPU Limit: 500m
 - **Port:** 3000
 
 ##### Service
-- **Name:** frontend-k8s
-- **Type:** NodePort
+- **Name:** frontend
+- **Type:** LoadBalancer
 - **Port:** 3000
 - **Target Port:** 3000
 
 #### Importance of Service Type
 
-- **ClusterIP:** Used for internal communication within the Kubernetes cluster. This is used for **database service (MongoDB)** to ensure secure and efficient access within the cluster.
+- **ClusterIP:** This service type is utilized for internal communication within the Kubernetes cluster. It is specifically used for the database service (MongoDB) to ensure that access within the cluster remains secure and efficient. By using ClusterIP, we can limit the database service's exposure to internal cluster traffic only, enhancing security and performance.
+  
+- **LoadBalancer:** This service type is employed for Frontend and Backend services. It makes the service accessible by exposing it on the IP address of each node at a specific port. This configuration is ideal because it allows these services to be reached from outside the Kubernetes cluster, thereby enabling external users to interact with the application. LoadBalancers provide a straightforward way to manage external traffic and ensure reliable access to the application.
 
-- **LoadBalancer:** Used on **Frontend and Backend services** Exposes the service on each node's IP at a static port. This is suitable because these services need to be accessible from outside the Kubernetes cluster, allowing external traffic to reach the application.
+In the Frontend deployment, we allocate more resources compared to the Backend deployment. This is due to the nature of React, which requires significant memory to compile its dependencies and render the graphical user interface effectively. The additional resources ensure that the Frontend operates smoothly and provides a responsive user experience.
 
-In the Frontend deployment, we allocate more resources compared to the backend deployment. This is necessary because React requires additional memory to compile its dependencies and render the graphical interface.
-
-By separating the deployments and services, we achieve modularity, scalability, and ease of management, ensuring each component of the application can be independently managed and scaled as needed.
+Separating the deployments and services allows us to achieve several key benefits, including modularity, scalability, and ease of management. Modularity means each component of the application is developed and maintained independently, which simplifies updates and troubleshooting. Scalability allows us to adjust resources for each service based on its specific needs, ensuring optimal performance. Ease of management is achieved because each component can be individually monitored and scaled, facilitating more efficient operations and maintenance.
 
 ## Networking
 
@@ -147,9 +145,9 @@ alias k=kubectl
 
 Next we apply all our configuration yaml files:
 ```bash
-k apply -f backend_D_S.yaml
-k apply -f mongo_D_S.yaml
-k apply -f fronted_D_S.yaml
+k apply -f backend.yaml
+k apply -f mongo.yaml
+k apply -f fronted.yaml
 ```
 And check that all its working fine using:
 ```bash
